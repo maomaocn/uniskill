@@ -5,7 +5,7 @@ const env = require('../core/env');
 
 module.exports = function installCmd(skillArg) {
     console.log(`\n===========================================`);
-    console.log(` ⚙️  Uniskill [v0.3] Global Engine \n     (Deep Binding Architecture) `);
+    console.log(` ⚙️  Uniskill [v0.3.3] Global Engine \n     (Deep Binding Architecture) `);
     console.log(`===========================================`);
     console.log(`> Targeting Request: ${skillArg}`);
 
@@ -69,15 +69,21 @@ module.exports = function installCmd(skillArg) {
                  }
             }
 
+            // [Crucial Fix] Ensure the `~/.shared-ai-skills/bin` directory physically exists 
+            // before we attempt to write any shell wrapper files into it!
+            const uniskillBinDir = path.join(env.HOME, '.shared-ai-skills', 'bin');
+            if (!fs.existsSync(uniskillBinDir)) {
+                fs.mkdirSync(uniskillBinDir, { recursive: true });
+            }
+
             // 2. 拔出兵刃 (Deep Script Wrapping)
-            // Scanner for python/js in specific common subdirs like scripts/
             const scriptsDir = path.join(resolvedPath, 'scripts');
             if (fs.existsSync(scriptsDir)) {
                 const scriptFiles = fs.readdirSync(scriptsDir);
                 for (let file of scriptFiles) {
                     if (file.endsWith('.py') || file.endsWith('.sh') || file.endsWith('.js')) {
                         const executablePath = path.join(scriptsDir, file);
-                        const binWrapperPath = path.join(env.HOME, '.shared-ai-skills', 'bin', parsedSkillName);
+                        const binWrapperPath = path.join(uniskillBinDir, parsedSkillName);
                         
                         let wrapperCode = `#!/bin/bash\n`;
                         if (file.endsWith('.py')) wrapperCode += `python3 "${executablePath}" "$@"\n`;
@@ -85,19 +91,18 @@ module.exports = function installCmd(skillArg) {
                         else wrapperCode += `bash "${executablePath}" "$@"\n`;
 
                         fs.writeFileSync(binWrapperPath, wrapperCode);
-                        fs.chmodSync(binWrapperPath, 0o755); // make it executable
+                        fs.chmodSync(binWrapperPath, 0o755); 
 
                         console.log(`  🚀 DEEP TARGET ACQUIRED: Linked executable \`${file}\` into Uniskill Global PATH wrapper.`);
                         console.log(`     (Command is now available directly as: \`${parsedSkillName}\`)`);
                         scriptWrapped++;
-                        break;  // Grab the main one and wrap it.
+                        break; 
                     }
                 }
             } else {
-                // If there's an explicit executable in the root
                 const rootPy = fs.readdirSync(resolvedPath).find(f => f.endsWith('.py') && !f.startsWith('.'));
                 if (rootPy) {
-                    const binWrapperPath = path.join(env.HOME, '.shared-ai-skills', 'bin', parsedSkillName);
+                    const binWrapperPath = path.join(uniskillBinDir, parsedSkillName);
                     const wrapperCode = `#!/bin/bash\npython3 "${path.join(resolvedPath, rootPy)}" "$@"\n`;
                     fs.writeFileSync(binWrapperPath, wrapperCode);
                     fs.chmodSync(binWrapperPath, 0o755);
