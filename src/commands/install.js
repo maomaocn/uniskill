@@ -12,16 +12,16 @@ module.exports = function installCmd(skillArg) {
     try {
         let openclawSlug = null;
 
+        // Clawhub does NOT accept username/skill-name formats (e.g. cnyezi/a-stock-analysis).
+        // It strictly only accepts the skill-name natively via the CLI.
         if (skillArg.startsWith('http')) {
             const urlParts = new URL(skillArg).pathname.split('/').filter(Boolean);
-            if (urlParts.length >= 2) {
-                openclawSlug = `${urlParts[urlParts.length - 2]}/${urlParts[urlParts.length - 1]}`;
-            } else if (urlParts.length === 1) {
-                openclawSlug = urlParts[0];
-            }
+            // The very LAST part of the URL is the correct slug for clawhub
+            openclawSlug = urlParts[urlParts.length - 1];
         } 
         else {
-            openclawSlug = skillArg;
+            // Even if someone types cnyezi/a-stock-analysis manually in uniskill, strip the author prefix
+            openclawSlug = skillArg.includes('/') ? skillArg.split('/').pop() : skillArg;
         }
 
         if (openclawSlug) {
@@ -29,8 +29,6 @@ module.exports = function installCmd(skillArg) {
             console.log(`           Fetching payload: ${openclawSlug}...`);
             
             try {
-                // FIXED: We must NOT 'ignore' stdout. Openclaw might need to prompt, or at least we need to see if it actually succeded.
-                // But specifically for npx, we must let it inherit the stdio so it doesn't fail silently or hang.
                 execSync(`npx --yes clawhub install ${openclawSlug}`, { 
                     stdio: 'inherit'
                 });
@@ -47,11 +45,8 @@ module.exports = function installCmd(skillArg) {
         const OPENCLAW_SKILLS_DIR = env.OPENCLAW_SKILLS_DIR;
          
         let extractionCount = 0;
+        const parsedSkillName = openclawSlug; 
         
-        // This splits 'cnyezi/a-stock-analysis' into 'a-stock-analysis'
-        const parsedSkillName = openclawSlug.split('/').pop(); 
-        
-        // We need to look in BOTH possible openclaw dirs (sometimes it creates it inside ~/.openclaw/workspace/skills)
         const possiblePaths = [
             path.join(OPENCLAW_SKILLS_DIR, parsedSkillName),
              path.join(env.HOME, '.openclaw', 'workspace', 'skills', parsedSkillName)
@@ -82,7 +77,6 @@ module.exports = function installCmd(skillArg) {
                  if(mdFiles.length > 0) {
                      let mergedContent = `# Uniskill Universal Capability: ${parsedSkillName}\n\n`;
                      for(let md of mdFiles) {
-                         // ignore package.json or node_modules
                          if (!md.includes('node_modules')) {
                              mergedContent += fs.readFileSync(path.join(resolvedPath, md), 'utf8') + '\n\n';
                          }
