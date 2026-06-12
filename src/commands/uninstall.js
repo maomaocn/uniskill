@@ -11,17 +11,39 @@ module.exports = function uninstallCmd(skillArg) {
 
     try {
         let openclawSlug = skillArg.includes('/') ? skillArg.split('/').pop() : skillArg;
+        let nativePurged = false;
 
-        // 1. 尝试调用原生卸载
+        console.log(`\n[Stage 1]: Native Sandbox Purge`);
+        
+        // 1. First attempt: Ask clawhub natively to uninstall
         try {
-            console.log(`\n[Stage 1]: Native Sandbox Purge`);
-            execSync(`npx --yes clawhub uninstall ${openclawSlug}`, { stdio: 'pipe' });
-            console.log(`  ✓ Native footprint erased.`);
+            execSync(`npx --yes clawhub uninstall ${openclawSlug}`, { stdio: 'ignore' });
+            console.log(`  ✓ Native uninstall routine completed.`);
+            nativePurged = true;
         } catch(e) {
-            console.log(`  ⚠ Native uninstall failed or not applicable.`);
+            // It might fail because clawhub strictly looks at certain paths. We will force a harsh manual purge below.
         }
 
-        // 2. 拔除各种挂载的器官
+        // 2. Second attempt: Manual eradication of physical openclaw workspace footprint
+        const possiblePaths = [
+             path.join(env.OPENCLAW_SKILLS_DIR, openclawSlug),
+             path.join(env.HOME, '.openclaw', 'workspace', 'skills', openclawSlug)
+        ];
+        
+        for (let p of possiblePaths) {
+            if (fs.existsSync(p)) {
+                // Node 14+ method for recursive rm -rf
+                fs.rmSync(p, { recursive: true, force: true });
+                console.log(`  ✓ Force-deleted remaining physical root at: ${p}`);
+                nativePurged = true;
+            }
+        }
+
+        if (!nativePurged) {
+            console.log(`  - No native sandbox footprint found to delete.`);
+        }
+
+        // 3. 拔除各种挂载的器官
         console.log(`\n[Stage 2]: Cross-Architecture Disconnect`);
         
         let cleaned = 0;
@@ -42,8 +64,14 @@ module.exports = function uninstallCmd(skillArg) {
             cleaned++;
         }
 
-        // Removing symlinks inside Cursor/MDC is more complex, leaving simple success mesage
-        if (cleaned > 0) {
+        // 4. Force repair openclaw.json config if needed (since it sometimes caches stuff)
+        // This stops the warning / cached list issues.
+        try {
+            execSync(`npx --yes openclaw doctor --fix`, { stdio: 'ignore' });
+            console.log(`  ✓ Repaired and flushed host config cache.`);
+        } catch(e) {}
+
+        if (cleaned > 0 || nativePurged) {
             console.log(`\n✅ Global Purge Complete. Eradicated everywhere.`);
         } else {
              console.log(`\n✅ Assumed clean. No traces found in Universal pool.`);
