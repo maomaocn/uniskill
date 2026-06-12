@@ -7,6 +7,8 @@ const installCmd = require('../src/commands/install');
 const scanCmd = require('../src/commands/scan');
 const migrateCmd = require('../src/commands/migrate');
 const initCmd = require('../src/commands/init');
+const memoryCmd = require('../src/commands/memory');
+const cursorCmd = require('../src/commands/cursor');
 
 program
   .name('uniskill')
@@ -32,5 +34,15 @@ program
   .command('migrate')
   .description('Migrate existing scattered skills into the shared Uniskill pool')
   .action(migrateCmd);
+
+program
+  .command('sync-memory')
+  .description('Synchronize user memories and feedback across Claude, OpenClaw, and the shared pool')
+  .action(memoryCmd);
+
+program
+  .command('cursor-bind [targetDir]')
+  .description('Bind Uniskill universal capabilities to target project using Cursor\'s modern .mdc schema')
+  .action(cursorCmd);
 
 program.parse(process.argv);

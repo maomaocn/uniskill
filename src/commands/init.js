@@ -4,7 +4,7 @@ const env = require('../core/env');
 module.exports = function initCmd() {
   console.log('\n🌟 Initializing Uniskill Universal Environment...');
   
-  const dirs = [env.UNISKILL_DIR, env.PROMPTS_DIR, env.MCP_DIR, env.BINDINGS_DIR];
+  const dirs = [env.UNISKILL_DIR, env.PROMPTS_DIR, env.MCP_DIR, env.BINDINGS_DIR, env.MEMORY_BANK_DIR];
   let created = 0;
 
   dirs.forEach(dir => {
@@ -18,8 +18,7 @@ module.exports = function initCmd() {
   });
 
   if (created > 0) {
-    console.log(`\n✅ Uniskill core systems initialized successfully!`);
-    console.log(`Try running \`uniskill scan\` to check your existing AI assets.`);
+    console.log(`\n✅ Uniskill core systems (including Memory Bank) initialized successfully!`);
   } else {
     console.log(`\n✅ Uniskill is already properly initialized.`);
   }
