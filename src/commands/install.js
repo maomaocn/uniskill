@@ -5,7 +5,7 @@ const env = require('../core/env');
 
 module.exports = function installCmd(skillArg) {
     console.log(`\n===========================================`);
-    console.log(` ⚙️  Uniskill [v0.3.3] Global Engine \n     (Deep Binding Architecture) `);
+    console.log(` ⚙️  Uniskill [v0.3.4] Global Engine \n     (Deep Binding Architecture) `);
     console.log(`===========================================`);
     console.log(`> Targeting Request: ${skillArg}`);
 
@@ -15,14 +15,15 @@ module.exports = function installCmd(skillArg) {
             const urlParts = new URL(skillArg).pathname.split('/').filter(Boolean);
             openclawSlug = urlParts[urlParts.length - 1];
         } else {
-            openclawSlug = skillArg.includes('/') ? skillArg.split('/').pop() : skillArg;
+             openclawSlug = skillArg.includes('/') ? skillArg.split('/').pop() : skillArg;
         }
 
         if (openclawSlug) {
             console.log(`\n[Stage 1]: Native Sandbox Execution`);
             console.log(`           Fetching payload: ${openclawSlug}...`);
             try {
-                execSync(`npx --yes clawhub install ${openclawSlug}`, { stdio: 'inherit' });
+                // Add --force so that re-runs (like after an error) don't get blocked by native "Already installed" restrictions.
+                execSync(`npx --yes clawhub install --force ${openclawSlug}`, { stdio: 'inherit' });
                 console.log(`  ✓ Fetched payload to host filesystem.`);
             } catch (err) {
                  console.log(`  ⚠ Native fetch issue. Continuing verification...`);
@@ -48,6 +49,15 @@ module.exports = function installCmd(skillArg) {
         if (targetSkillPath) {
             const resolvedPath = fs.realpathSync(targetSkillPath);
             
+            // --- 0. Directory Protection (The vital FIX for ENOENT) ---
+            const uniskillBinDir = path.join(env.HOME, '.shared-ai-skills', 'bin');
+            if (!fs.existsSync(uniskillBinDir)) {
+                 fs.mkdirSync(uniskillBinDir, { recursive: true });
+            }
+             if (!fs.existsSync(env.PROMPTS_DIR)) {
+                 fs.mkdirSync(env.PROMPTS_DIR, { recursive: true });
+            }
+
             // 1. 抽取灵魂 (Markdown Prompts)
             const promptFilePath = path.join(resolvedPath, 'prompt.md');
             const targetSharedPath = path.join(env.PROMPTS_DIR, `${parsedSkillName}.md`);
@@ -67,13 +77,6 @@ module.exports = function installCmd(skillArg) {
                      console.log(`  ✓ Merged ${mdFiles.length} logic models into Global DB.`);
                      extractionCount++;
                  }
-            }
-
-            // [Crucial Fix] Ensure the `~/.shared-ai-skills/bin` directory physically exists 
-            // before we attempt to write any shell wrapper files into it!
-            const uniskillBinDir = path.join(env.HOME, '.shared-ai-skills', 'bin');
-            if (!fs.existsSync(uniskillBinDir)) {
-                fs.mkdirSync(uniskillBinDir, { recursive: true });
             }
 
             // 2. 拔出兵刃 (Deep Script Wrapping)
