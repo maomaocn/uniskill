@@ -1,6 +1,6 @@
 {
   "name": "@robertsshu/uniskill",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "The Universal Middle-Layer for AI Agents. Mount your skills (Prompts/MCP) globally across Cursor, Claude Code, OpenClaw, and more.",
   "main": "src/index.js",
   "bin": {
