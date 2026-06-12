@@ -34,7 +34,7 @@ Uniskill 是一个全局 Node CLI 工具。要求系统中已安装 Node.js 的�
 
 ```bash
 # 全局安装 (稍后发布至 NPM Registry)
-# npm install -g @maomaocn/uniskill 
+# npm install -g @robertsshu/uniskill 
 
 # 当前源码测试安装
 git clone git@github.com:maomaocn/uniskill.git

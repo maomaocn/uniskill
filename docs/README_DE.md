@@ -34,7 +34,7 @@ Uniskill ist als globales Node CLI-Dienstprogramm konzipiert. Eine gültige Node
 
 ```bash
 # Globale NPM-Installation (Bald in der öffentlichen Registry verfügbar)
-# npm install -g @maomaocn/uniskill 
+# npm install -g @robertsshu/uniskill 
 
 # Für Quellcode-Tests
 git clone git@github.com:maomaocn/uniskill.git

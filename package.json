@@ -1,5 +1,5 @@
 {
-  "name": "@maomaocn/uniskill",
+  "name": "@robertsshu/uniskill",
   "version": "0.1.0",
   "description": "The Universal Middle-Layer for AI Agents. Mount your skills (Prompts/MCP) globally across Cursor, Claude Code, OpenClaw, and more.",
   "main": "src/index.js",
