@@ -1,0 +1,12 @@
+# Node
+node_modules/
+npm-debug.log
+
+# 个人私有挂载的技能数据（开源仓库只提供工具代码，不上传你个人的文件）
+mcp-servers/
+prompts/
+native-bindings/
+*.bak
+
+# 环境变量与隐私
+.env
