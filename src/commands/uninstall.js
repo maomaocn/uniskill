@@ -11,41 +11,8 @@ module.exports = function uninstallCmd(skillArg) {
 
     try {
         let openclawSlug = skillArg.includes('/') ? skillArg.split('/').pop() : skillArg;
-        let nativePurged = false;
 
-        console.log(`\n[Stage 1]: Native Sandbox Purge`);
-        
-        // 1. First attempt: Ask clawhub natively to uninstall
-        try {
-            execSync(`npx --yes clawhub uninstall ${openclawSlug}`, { stdio: 'ignore' });
-            console.log(`  ✓ Native uninstall routine completed.`);
-            nativePurged = true;
-        } catch(e) {
-            // It might fail because clawhub strictly looks at certain paths. We will force a harsh manual purge below.
-        }
-
-        // 2. Second attempt: Manual eradication of physical openclaw workspace footprint
-        const possiblePaths = [
-             path.join(env.OPENCLAW_SKILLS_DIR, openclawSlug),
-             path.join(env.HOME, '.openclaw', 'workspace', 'skills', openclawSlug)
-        ];
-        
-        for (let p of possiblePaths) {
-            if (fs.existsSync(p)) {
-                // Node 14+ method for recursive rm -rf
-                fs.rmSync(p, { recursive: true, force: true });
-                console.log(`  ✓ Force-deleted remaining physical root at: ${p}`);
-                nativePurged = true;
-            }
-        }
-
-        if (!nativePurged) {
-            console.log(`  - No native sandbox footprint found to delete.`);
-        }
-
-        // 3. 拔除各种挂载的器官
-        console.log(`\n[Stage 2]: Cross-Architecture Disconnect`);
-        
+        console.log(`\n[Stage 1]: Internal Ecosystem Disconnect`);
         let cleaned = 0;
         
         // Remove memory prompts
@@ -64,12 +31,50 @@ module.exports = function uninstallCmd(skillArg) {
             cleaned++;
         }
 
-        // 4. Force repair openclaw.json config if needed (since it sometimes caches stuff)
-        // This stops the warning / cached list issues.
+        console.log(`\n[Stage 2]: Brutal Native Sandbox Purge`);
+        let nativePurged = false;
+        
+        // Sometimes the package is registered inside OpenClaw's own config JSON.
+        // If it's loaded as a plugin or skill, we have to tell openclaw CLI to forcefully disable it first before we rip out the directory.
         try {
-            execSync(`npx --yes openclaw doctor --fix`, { stdio: 'ignore' });
-            console.log(`  ✓ Repaired and flushed host config cache.`);
+            execSync(`npx --yes openclaw plugins disable ${openclawSlug}`, { stdio: 'ignore' });
+            console.log(`  ✓ Forced OpenClaw to unregister plugin/skill logic.`);
         } catch(e) {}
+
+        // Manual eradication of physical openclaw footprint
+        // The pathing is often the trickster. Let's make sure we find all variants.
+        const possiblePaths = [
+             path.join(env.OPENCLAW_SKILLS_DIR, openclawSlug),
+             path.join(env.HOME, '.openclaw', 'workspace', 'skills', openclawSlug),
+             path.join(env.HOME, '.openclaw', 'plugins', openclawSlug)
+        ];
+        
+        for (let p of possiblePaths) {
+            if (fs.existsSync(p)) {
+                fs.rmSync(p, { recursive: true, force: true });
+                console.log(`  ✓ Force-deleted remaining physical root at: ${p}`);
+                nativePurged = true;
+            }
+        }
+
+        if (!nativePurged) {
+            console.log(`  - No native sandbox footprint directories found to delete.`);
+        }
+
+        // Finally, run clawhub's uninstall to clear its own internal state tracking
+        try {
+            execSync(`npx --yes clawhub uninstall ${openclawSlug}`, { stdio: 'ignore' });
+            console.log(`  ✓ Triggered native module state clear.`);
+        } catch(e) {
+            console.log(`  - Native uninstaller skip: likely already cleared.`);
+        }
+
+        // Extremely aggressive sweeps: Fix config keys that keep openclaw ghosting.
+        try {
+            console.log(`  ✓ Attempting post-clean doctor fix...`);
+            execSync(`npx --yes openclaw doctor --fix`, { stdio: 'ignore' });
+        } catch(e) {}
+
 
         if (cleaned > 0 || nativePurged) {
             console.log(`\n✅ Global Purge Complete. Eradicated everywhere.`);
