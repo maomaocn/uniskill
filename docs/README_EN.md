@@ -34,7 +34,7 @@ Uniskill is engineered as a global Node CLI utility. A valid Node.js runtime env
 
 ```bash
 # Global NPM Installation (Soon available to public Registry)
-# npm install -g uniskill 
+# npm install -g @maomaocn/uniskill 
 
 # For source-code testing
 git clone git@github.com:maomaocn/uniskill.git

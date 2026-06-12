@@ -34,7 +34,7 @@ Uniskill はグローバルなNode CLIツールとして機能します。シス
 
 ```bash
 # グローバルインストール（近日NPM Registryにて公開予定）
-# npm install -g uniskill 
+# npm install -g @maomaocn/uniskill 
 
 # ソースコード検証用のインストール
 git clone git@github.com:maomaocn/uniskill.git

@@ -34,7 +34,7 @@ Uniskill은 글로벌 Node CLI 유틸리티로 설계되었습니다. 시스템�
 
 ```bash
 # 글로벌 NPM 설치 (곧 공개 Registry에 등록 예정)
-# npm install -g uniskill 
+# npm install -g @maomaocn/uniskill 
 
 # 소스코드 테스트용 설치
 git clone git@github.com:maomaocn/uniskill.git
