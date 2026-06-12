@@ -17,12 +17,13 @@ Uniskill 是一款跨平台、多智能体的中间件架构，旨在解决现�
 
 ---
 
-### 🔥 核心设计理念
+### 🔥 核心架构与功能迭代
 
 - **1️⃣ Single Source of Truth (绝对唯一真相池)**：你的所有 AI 本地配置资产，将集中收敛并保存在 `~/.shared-ai-skills/` 主干库中。不再有配置丢失，出差换电脑只需同步这一个目录。
 - **2️⃣ The Ultimate Translator (全端自动转译器)**：工具会自动将共用的“意图”格式化并软连接分发。自动修改各种配置，生成 `.cursorrules` 供给 Cursor，或改写 `settings.json` 挂载 MCP 控制台供给 Claude。
-- **3️⃣ Brownfield Migration (老兵收编引擎)**：一键执行 `uniskill scan` 嗅探全机资产，再用 `uniskill migrate` 自动提纯、去重并强制收编那些散落在各个老版本 AI 工具体内的陈旧技能包。
-- **4️⃣ 跨操作系统兼容**：无惧底层目录差异。在 macOS、Linux 或 Windows 环境中灵活使用 Symlink 符号包裹和 Path 环境变量影子技术实现静默覆盖。
+- **3️⃣ 跨端记忆聚合引擎 (v0.3.5 新增)**：指令 `uniskill sync-memory`。它能将所有机器人在时间线上学到的关于你的反馈（教训/习性）合并成《全球记忆池》。更恐怖的是：如果发现全局技能工具（比如某量化系统），它会自动脑补出**“隐式触发条件法则”**——**以后哪怕你不提工具名字，如果它侦测到你要查数据，它也会像系统肌肉记忆一样自主在本地静默调用原生武器完成任务！**
+- **4️⃣ 深层环境劫持与可执行映射 (v0.3 突破)**：Uniskill 安装器会自动扫描外部生态包内部的 python、sh 等底层核心可执行代码，强行将其提炼为一个全新的系统环境变量级的命令，并写入宿主的 `$PATH` 中。让底座拥有真正的破坏与输出执行力。
+- **5️⃣ 次世代终端绑定**：利用 `uniskill cursor-bind` 一键为您当前的项目打上最新的 `.mdc` 前沿结构化标识配置网阵！
 
 ---
 
@@ -33,14 +34,8 @@ Uniskill 是一款跨平台、多智能体的中间件架构，旨在解决现�
 Uniskill 是一个全局 Node CLI 工具。要求系统中已安装 Node.js 的环境。
 
 ```bash
-# 全局安装 (稍后发布至 NPM Registry)
-# npm install -g @robertsshu/uniskill 
-
-# 当前源码测试安装
-git clone git@github.com:maomaocn/uniskill.git
-cd uniskill
-npm install
-npm link
+# 全局安装 (需要 Node 环境支持)
+npm install -g @robertsshu/uniskill 
 ```
 
 ### 基础环境初始化
@@ -48,12 +43,14 @@ npm link
 ```bash
 uniskill init
 ```
-*此操作将创建核心文件夹，并建立透明拦截挂载点。*
+*此操作将创建核心文件夹，并自动尝试向您的 `.bashrc` 及 `.zshrc` 执行透明跨系统二进制 $PATH 注入挂载点。* （安装完成可能需要重启你的终端令系统读取全局工具）
 
-### 使用方法全景
-- 扫描全机已有的 AI 资产重叠度：`uniskill scan`
-- 强制收编现有工具技能包至统管挂载池：`uniskill migrate`
-- 安装通用技能包：`uniskill install <来源路径或URL>`
+### 核心操作指南
+- **安装共用技能包**: `uniskill install <来源路径或URL>` (例如直接强夺 OpenClaw 原生包)
+- **扫描重叠工具**: `uniskill scan` 嗅探全机资产重叠率。
+- **提纯收编**: `uniskill migrate` 自动提纯、去重并强制收编那些陈旧的专有旧版工具到主线骨干网里。
+- **强行卸载清除**: `uniskill uninstall <skill_name>` 进行涵盖物理层、钩子层与幽灵 JSON 缓存层的完全暴力抹除。
+- **全局多端脑脑共振**: `uniskill sync-memory`。
 
 ---
 
