@@ -11,38 +11,53 @@
 Uniskill is a cross-platform, multi-agent middleware architecture designed to solve the fragmentation problem in modern AI-assisted development tools (Cursor, Claude Code, OpenClaw, Codex, Hermes, Opencode, etc.). 
 
 **Uniskill puts an end to this configuration limbo.**
-> Install or write a skill (prompt / MCP server / native python script) just **ONCE**, and the system will instantaneously translate it into universally compatible formats and transparently hot-mount it into the core of **ALL** your AI assistants under your command!
+> Install or write a skill (prompt / MCP / script) **ONCE**, and transparently hot-mount it into the core of **ALL** your AI assistants instantaneously.
 
 ---
 
-### 🔥 What's New & Core Philosophies
+## 🛠️ Deep Dive: Core Commands & Usage
 
-- **1️⃣ Single Source of Truth**: All configuration assets converged centrally in `~/.shared-ai-skills/`.
-- **2️⃣ The Deep Executable Wrapper (v0.3)**: Uniskill dives into foreign packages, extracts standalone `.py` or `.js` executables, and automatically binds them to your OS environment's global `$PATH` as ghost commands, equipping all AI clients with true execution impact.
-- **3️⃣ Cross-Agent Memory Sync Engine (v0.3.5)**: Uniskill not only syncs feedback and habits across AIs, it extracts **Implicit Trigger Rules** based on installed skills. Eventually, if you just lazily say "check the stock market", your AI's *Unified Muscle Memory* will implicitly spin up your local analyzer command in the background natively without you naming the tool.
-- **4️⃣ Complete Purge Matrix**: A highly aggressive universal `uniskill uninstall` logic ensuring pure cleanups from Ghost JSON configs and Deep symlinks. 
-- **5️⃣ Next-Gen Mounter**: Support via `uniskill cursor-bind` to quickly mesh the latest `.mdc` file formats for advanced Cursor implementations.
-
----
-
-## 🛠️ Quick Start
-
+### 1. Install & Init
 ```bash
-# Global NPM Installation
 npm install -g @robertsshu/uniskill 
-```
-
-### Initial Configuration
-```bash
 uniskill init
 ```
-*Creates the foundation matrix. Restart your terminal so the cross-OS path injection succeeds!*
+*(Restart terminal after init to apply the global executable `$PATH` bridge)*
 
-### Main Commands
-- Map overlapping legacies across your machine: `uniskill scan`
-- Forcefully mobilize legacy tool packages: `uniskill migrate`
-- Install universally shared capability packages: `uniskill install <path-or-URL>`
-- Sync memories + Autonomy rules: `uniskill sync-memory`
-- Complete removal tracking: `uniskill uninstall <name>`
+### 2. Installing Skills (`install`)
+Route any package instantly to all platforms:
+```bash
+uniskill install https://clawhub.ai/cnyezi/a-stock-analysis
+```
 
-Let's build the **Unified AI Control Plane for the Developer's Terminal** together!
+### 3. Absolute Purge (`uninstall`)
+AI tools often leave ghost metadata and cache. Provide a brutal, clean sweep of both the source footprint and global wrappers:
+```bash
+uniskill uninstall a-stock-analysis
+```
+
+### 4. Consciousness Merge & Auto-Trigger (`sync-memory`)
+Uniskill's killer feature. Run this to align the brains of all local AI tools:
+```bash
+uniskill sync-memory
+```
+1. It aggregates behavioral feedback across varying AI agents.
+2. It generates **Implicit Auto-Triggers** based on installed skills. Your AI will learn to run local bash tools reflexively in the background without you specifically naming them.
+
+### 5. Next-Gen Editor Binding (`cursor-bind`)
+For modern tools like Cursor utilizing directory-based rules (`.mdc`):
+```bash
+cd your/project/directory
+uniskill cursor-bind
+```
+This forces the Uniskill global memory pool and compiled instructions straight into `.cursor/rules/`, arming the IDE with unified intent matrices instantly.
+
+### 6. Legacy Assets Control (`scan` & `migrate`)
+```bash
+uniskill scan   # Discover overlapping AI assets in your system
+uniskill migrate # Convert legacy/isolated skills into the shared core pool
+```
+
+---
+
+Build the **Unified AI Control Plane** with us!
