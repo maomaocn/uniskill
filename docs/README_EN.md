@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-> [Back to Home](../README.md) | [简体中文](README_ZH.md) | [日本語](README_JA.md)
+> [Back to Home](../README.md) | [简体中文](README_ZH.md) | [日本語](README_JA.md) | [한국어](README_KO.md) | [Deutsch](README_DE.md)
 
 ---
 

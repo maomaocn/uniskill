@@ -4,7 +4,7 @@
 
 > [!NOTE]
 > Select your language / 选择您的语言:
-> [English](docs/README_EN.md) | [简体中文](docs/README_ZH.md) | [日本語](docs/README_JA.md)
+> [English](docs/README_EN.md) | [简体中文](docs/README_ZH.md) | [日本語](docs/README_JA.md) | [한국어](docs/README_KO.md) | [Deutsch](docs/README_DE.md)
 
 ---
 
